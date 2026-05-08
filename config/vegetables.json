@@ -1,0 +1,26 @@
+[
+  {
+    "id": "aggregated_onion_production_and_yields",
+    "name": "Aggregated dry onion production and yields",
+    "display_name": "Dry Onion",
+    "category": "vegetables",
+    "metric_family": "yield_production",
+    "dataset_slug": "aggregated-dry-onion-production-and-yields"
+  },
+  {
+    "id": "aggregated_carrot_production_and_yields",
+    "name": "Aggregated carrots production and yields",
+    "display_name": "Carrot",
+    "category": "vegetables",
+    "metric_family": "yield_production",
+    "dataset_slug": "aggregated-carrots-production-and-yields"
+  },
+  {
+    "id": "aggregated_sweet_corn_production_and_yields",
+    "name": "Aggregated sweetcorn production and yields",
+    "display_name": "Sweet Corn",
+    "category": "vegetables",
+    "metric_family": "yield_production",
+    "dataset_slug": "aggregated-sweetcorn-production-and-yields"
+  }
+]
