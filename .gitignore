@@ -3,5 +3,10 @@
 __pycache__/
 *.pyc
 data/raw/
-data/processed/
-data/vector_store/
+data/processed/*.csv
+!data/processed/
+!data/processed/*.csv
+data/vector_store/*
+!data/vector_store/
+!data/vector_store/index.faiss
+!data/vector_store/metadata.json

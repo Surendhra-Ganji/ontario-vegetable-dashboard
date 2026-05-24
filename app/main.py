@@ -7,8 +7,10 @@ from app.services.dataset_service import list_vegetables, get_vegetable, get_kpi
 from app.services.compare_service import compare_datasets
 from app.services.rag_chat_service import rag_answer
 from app.services.vector_service import get_embedding
+from app.services.vector_service import INDEX_FILE, META_FILE
 from app.services.settings import SETTINGS
 from app.services.settings import CONFIG_FILE_PATH, reload_settings
+from app.services.dataset_service import PROCESSED_DIR, get_kpis, list_vegetables
 import json
 
 app = FastAPI(title="Ontario Vegetable Dashboard API")
@@ -115,6 +117,28 @@ def debug_llm(force: bool = False):
 
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"llm debug failed: {exc}")
+
+
+@app.get("/debug/data")
+def debug_data(force: bool = False):
+    """Verify processed CSVs and vector store files are available in deployment."""
+    if SETTINGS.get("APP_ENV") == "production" and not force:
+        raise HTTPException(status_code=403, detail="Not allowed in production")
+
+    csv_files = sorted(p.name for p in PROCESSED_DIR.glob("*.csv")) if PROCESSED_DIR.exists() else []
+    kpis = get_kpis()
+
+    return {
+        "ok": bool(csv_files) and bool(kpis),
+        "processed_dir": str(PROCESSED_DIR),
+        "processed_dir_exists": PROCESSED_DIR.exists(),
+        "processed_csv_count": len(csv_files),
+        "processed_csv_files": csv_files,
+        "catalog_count": len(list_vegetables()),
+        "kpi_count": len(kpis),
+        "vector_index_exists": INDEX_FILE.exists(),
+        "vector_metadata_exists": META_FILE.exists(),
+    }
 
 
 @app.get("/admin/config")
