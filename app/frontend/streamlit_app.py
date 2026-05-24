@@ -323,6 +323,7 @@ def save_feedback(name: str, email: str, feedback_type: str, crop: str, rating: 
     combined.to_csv(FEEDBACK_FILE, index=False)
 
 
+st.title("Ontario Crop Analysis")
 st.caption("Live Ontario Open Data ETL + FAISS RAG + Groq/OpenAI chat")
 
 
