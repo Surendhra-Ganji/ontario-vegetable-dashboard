@@ -20,9 +20,10 @@ def generate_answer(question: str, retrieved_context: str) -> str:
         if not SETTINGS.get("OPENAI_API_KEY"):
             raise RuntimeError("OPENAI_API_KEY is not configured.")
 
-        kwargs = {"api_key": SETTINGS["OPENAI_API_KEY"]}
-        if SETTINGS.get("OPENAI_BASE_URL"):
-            kwargs["base_url"] = SETTINGS["OPENAI_BASE_URL"]
+        kwargs = {
+            "api_key": SETTINGS["OPENAI_API_KEY"],
+            "base_url": SETTINGS.get("OPENAI_BASE_URL") or "https://api.openai.com/v1",
+        }
 
         client = OpenAI(**kwargs)
         model = SETTINGS.get("OPENAI_MODEL", "gpt-4o-mini")
@@ -68,14 +69,20 @@ Retrieved context:
 {retrieved_context}
 """.strip()
 
-    response = client.chat.completions.create(
-        model=model,
-        temperature=float(SETTINGS.get("TEMPERATURE", 0.2)),
-        max_tokens=int(SETTINGS.get("MAX_TOKENS", 800)),
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt},
-        ],
-    )
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            temperature=float(SETTINGS.get("TEMPERATURE", 0.2)),
+            max_tokens=int(SETTINGS.get("MAX_TOKENS", 800)),
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+        )
 
-    return response.choices[0].message.content or ""
+        return response.choices[0].message.content or ""
+    except Exception as exc:
+        # Provide a clearer error for the API layer and log full exception
+        import traceback
+        traceback.print_exc()
+        raise RuntimeError(f"Connection error: {exc}")

@@ -325,25 +325,6 @@ def save_feedback(name: str, email: str, feedback_type: str, crop: str, rating: 
 
 st.caption("Live Ontario Open Data ETL + FAISS RAG + Groq/OpenAI chat")
 
-with st.sidebar:
-    st.header("Access")
-    username = st.text_input("Username", value="admin")
-    password = st.text_input("Password", value="ChangeMe123!", type="password")
-
-    if st.button("Login"):
-        try:
-            api_post("/auth/login", {"username": username, "password": password})
-            st.success("Login successful")
-        except Exception as exc:
-            st.error(f"Login failed: {exc}")
-
-    st.divider()
-    st.subheader("AI Status")
-    try:
-        st.json(api_get("/ai/status"))
-    except Exception as exc:
-        st.error(f"AI status failed: {exc}")
-
 
 try:
     veg_resp = api_get("/vegetables")
